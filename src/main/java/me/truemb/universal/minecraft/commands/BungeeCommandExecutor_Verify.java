@@ -17,8 +17,8 @@ public class BungeeCommandExecutor_Verify extends Command implements TabExecutor
 	private DiscordNotifyMain instance;
 	private DN_VerifyCommand verifyCommand;
 
-	public BungeeCommandExecutor_Verify(DiscordNotifyMain plugin) {
-		super("verify");
+	public BungeeCommandExecutor_Verify(DiscordNotifyMain plugin, String name, String... aliases) {
+		super(name, null, aliases);
 		this.instance = plugin;
 		this.verifyCommand = new DN_VerifyCommand(plugin);
 	}

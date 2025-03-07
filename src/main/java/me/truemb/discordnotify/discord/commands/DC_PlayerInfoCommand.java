@@ -27,8 +27,8 @@ public class DC_PlayerInfoCommand extends SimpleAddon {
 
 	private DiscordNotifyMain instance;
 	
-    public DC_PlayerInfoCommand(DiscordNotifyMain plugin) {
-        super("Disnotify PlayerInfo", "disnotify::playerinfo", plugin.getPluginDescription().getAuthor(), plugin.getPluginDescription().getVersion(), new String[] { "playerinfo", "pi" });
+    public DC_PlayerInfoCommand(DiscordNotifyMain plugin, String... aliases) {
+        super("Disnotify PlayerInfo", "disnotify::playerinfo", plugin.getPluginDescription().getAuthor(), plugin.getPluginDescription().getVersion(), aliases);
         this.instance = plugin;
     }
     

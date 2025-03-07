@@ -3,7 +3,9 @@ package me.truemb.universal.minecraft.main;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
+import me.truemb.discordnotify.utils.UTF8YamlConfiguration;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.command.Command;
@@ -111,9 +113,13 @@ public class SpongeMain implements IRelay {
     	
 		//LOAD COMMANDS
 		if(!this.instance.getUniversalServer().isProxySubServer()) {
-	    	e.register(this.pluginContainer, this.dchatCommand, "dchat");
-	    	e.register(this.pluginContainer, this.verifyCommand, "verify");
-	    	e.register(this.pluginContainer, this.staffCommand, "staff", "s");
+            registerCommand(e, "dchat", this.dchatCommand, "dchat");
+
+            // verify -
+            registerCommand(e, "verify", this.verifyCommand, "verify");
+
+            // staff -
+            registerCommand(e, "staff", this.staffCommand, "staff");
 		}
     }
 
@@ -168,4 +174,15 @@ public class SpongeMain implements IRelay {
         return false;
     }
 
+    private void registerCommand(RegisterCommandEvent<Command.Raw> e, String configName, Command.Raw command, String fallbackName) {
+        final UTF8YamlConfiguration config = this.instance.getConfigManager().getConfig();
+        final List<String> commandAliases = config.getStringList("Options.CommandOverride.Minecraft." + configName);
+        if (commandAliases != null && !commandAliases.isEmpty()) {
+            final String first = commandAliases.get(0);
+            commandAliases.remove(0);
+            e.register(this.pluginContainer, command, first, commandAliases.toArray(new String[0]));
+        } else {
+            e.register(this.pluginContainer, command, fallbackName);
+        }
+    }
 }

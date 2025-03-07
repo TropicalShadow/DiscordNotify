@@ -14,8 +14,8 @@ public class BungeeCommandExecutor_Staff extends Command {
 	private DiscordNotifyMain instance;
 	private DN_StaffCommand staffCommand;
 
-	public BungeeCommandExecutor_Staff(DiscordNotifyMain plugin) {
-		super("staff", plugin.getConfigManager().getConfig().getString("Permissions.StaffChat"), "s");
+	public BungeeCommandExecutor_Staff(DiscordNotifyMain plugin, String name, String... aliases) {
+		super(name, plugin.getConfigManager().getConfig().getString("Permissions.StaffChat"), aliases);
 		this.instance = plugin;
 		this.staffCommand = new DN_StaffCommand(plugin);
 	}

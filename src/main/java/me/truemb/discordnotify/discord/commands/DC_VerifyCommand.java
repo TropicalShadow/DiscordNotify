@@ -22,8 +22,8 @@ public class DC_VerifyCommand extends SimpleAddon {
 	
 	private DiscordNotifyMain instance;
 	
-    public DC_VerifyCommand(DiscordNotifyMain plugin) {
-        super("Disnotify Verify", "disnotify::verify", plugin.getPluginDescription().getAuthor(), plugin.getPluginDescription().getVersion(), new String[] { "verify" });
+    public DC_VerifyCommand(DiscordNotifyMain plugin, String... aliases) {
+        super("Disnotify Verify", "disnotify::verify", plugin.getPluginDescription().getAuthor(), plugin.getPluginDescription().getVersion(), aliases);
         this.instance = plugin;
     }
     

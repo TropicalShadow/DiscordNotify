@@ -16,8 +16,8 @@ public class BukkitCommandExecutor_Verify extends BukkitCommand {
 	private DiscordNotifyMain instance;
 	private DN_VerifyCommand verifyCommand;
 
-	public BukkitCommandExecutor_Verify(DiscordNotifyMain plugin) {
-		super("verify");
+	public BukkitCommandExecutor_Verify(DiscordNotifyMain plugin, String name) {
+		super(name);
 		this.instance = plugin;
 		this.verifyCommand = new DN_VerifyCommand(plugin);
 	}

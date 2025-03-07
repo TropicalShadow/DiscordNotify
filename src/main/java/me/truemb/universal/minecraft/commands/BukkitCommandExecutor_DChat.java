@@ -14,8 +14,8 @@ public class BukkitCommandExecutor_DChat extends BukkitCommand {
 	private DiscordNotifyMain instance;
 	private DN_DChatCommand dchatCommand;
 
-	public BukkitCommandExecutor_DChat(DiscordNotifyMain plugin) {
-		super("dchat");
+	public BukkitCommandExecutor_DChat(DiscordNotifyMain plugin, String name) {
+		super(name);
 		this.instance = plugin;
 		this.dchatCommand = new DN_DChatCommand(plugin);
 	}

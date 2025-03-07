@@ -87,19 +87,28 @@ public class VerifySQL {
 					//REQUESTING
 					instance.getVerifyManager().setVerficationProgress(mcuuid, member.getIdLong());
 			    	cmd.reply(discordManager.getDiscordMessage("verification.request", placeholder));
+
+					final List<String> verifyCommandAliases = instance.getConfigManager().getConfig().getStringList("Options.CommandOverride.Minecraft.verify");
+					String verifyCommandName;
+					if(verifyCommandAliases != null && !verifyCommandAliases.isEmpty()) {
+						verifyCommandName = verifyCommandAliases.get(0);
+					} else {
+						verifyCommandName = "verify";
+					}
+					verifyCommandName = "/" + verifyCommandName;
 			    	
 			    	//MINECRAFT CLICK MESSAGE
 			    	TextComponent textComponent = Component
 			    			.text(instance.getConfigManager().getMinecraftMessage("verification.requestClickMessage.message", false).replaceAll("(?i)%user%", member.getUser().getAsTag()) + "\n")
 			    				.append(
 			    					Component.text(instance.getConfigManager().getMinecraftMessage("verification.requestClickMessage.accept", false))
-			    					.clickEvent(ClickEvent.runCommand("/verify accept"))
+			    					.clickEvent(ClickEvent.runCommand(verifyCommandName + " accept"))
 			    					.hoverEvent(HoverEvent.showText(Component.text(instance.getConfigManager().getMinecraftMessage("verification.requestClickMessage.acceptHover", false))))
 			    				).append(
 					    			Component.text(instance.getConfigManager().getMinecraftMessage("verification.requestClickMessage.space", false))
 					    		).append(
 				    				Component.text(instance.getConfigManager().getMinecraftMessage("verification.requestClickMessage.deny", false))
-				    				.clickEvent(ClickEvent.runCommand("/verify deny"))
+				    				.clickEvent(ClickEvent.runCommand(verifyCommandName + " deny"))
 				    				.hoverEvent(HoverEvent.showText(Component.text(instance.getConfigManager().getMinecraftMessage("verification.requestClickMessage.denyHover", false))))
 				    			);
 			    	

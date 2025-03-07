@@ -14,8 +14,8 @@ public class BungeeCommandExecutor_DChat extends Command {
 	private DiscordNotifyMain instance;
 	private DN_DChatCommand dchatCommand;
 
-	public BungeeCommandExecutor_DChat(DiscordNotifyMain plugin) {
-		super("dchat");
+	public BungeeCommandExecutor_DChat(DiscordNotifyMain plugin, String name, String... aliases) {
+		super(name, null, aliases);
 		this.instance = plugin;
 		this.dchatCommand = new DN_DChatCommand(plugin);
 	}

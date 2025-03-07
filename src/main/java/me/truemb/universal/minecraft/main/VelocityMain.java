@@ -3,12 +3,10 @@ package me.truemb.universal.minecraft.main;
 import java.io.File;
 import java.net.SocketAddress;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Logger;
 
+import com.velocitypowered.api.command.SimpleCommand;
 import org.bstats.velocity.Metrics;
 
 import com.google.inject.Inject;
@@ -113,25 +111,18 @@ public class VelocityMain implements IRelay {
 		this.proxy.getEventManager().register(this, listener);
 		
 		//LOAD COMMANDS
-		CommandManager commandManager = this.proxy.getCommandManager();
 		if(this.instance.getConfigManager().getConfig().getBoolean("Options.Chat.enableSplittedChat")) {
 			VelocityCommandExecutor_DChat dchatCommand = new VelocityCommandExecutor_DChat(this.instance);
-			CommandMeta dchatMeta = commandManager.metaBuilder("dchat").build();
-			
-			commandManager.register(dchatMeta, dchatCommand);
+            registerCommand("dchat", dchatCommand, "dchat");
 		}
 		
 		if(this.instance.getConfigManager().isFeatureEnabled(FeatureType.Staff)) {
 			VelocityCommandExecutor_Staff staffCommand = new VelocityCommandExecutor_Staff(this.instance);
-			CommandMeta staffMeta = commandManager.metaBuilder("staff").aliases("s").build();
-			
-			commandManager.register(staffMeta, staffCommand);
+            registerCommand("staff", staffCommand, "staff");
 		}
-		
+
 		VelocityCommandExecutor_Verify verifyCommand = new VelocityCommandExecutor_Verify(this.instance);
-		CommandMeta verifyMeta = commandManager.metaBuilder("verify").build();
-		
-		commandManager.register(verifyMeta, verifyCommand);
+        registerCommand("verify", verifyCommand, "verify");
 		
 		//METRICS ANALYTICS
 		if(this.instance.getConfigManager().getConfig().getBoolean("Options.useMetrics"))
@@ -174,4 +165,22 @@ public class VelocityMain implements IRelay {
         return true;
     }
 
+    private void registerCommand(String configName, SimpleCommand command, String fallbackName){
+        final CommandManager commandManager = this.proxy.getCommandManager();
+        final List<String> commandNames = this.instance.getConfigManager().getConfig().getStringList("Options.CommandOverride.Minecraft." + configName);
+
+        final CommandMeta commandMeta;
+        if(commandNames != null && !commandNames.isEmpty()) {
+            final String first = commandNames.get(0);
+            final CommandMeta.Builder cmdBuilder = commandManager.metaBuilder(first.trim());
+            for(int i = 1; i < commandNames.size(); i++) {
+                cmdBuilder.aliases(commandNames.get(i).trim());
+            }
+            commandMeta = cmdBuilder.build();
+        }else{
+            commandMeta = commandManager.metaBuilder(fallbackName).build();
+        }
+
+        commandManager.register(commandMeta, command);
+    }
 }

@@ -15,8 +15,8 @@ public class BukkitCommandExecutor_Staff extends BukkitCommand {
 	private DiscordNotifyMain instance;
 	private DN_StaffCommand staffCommand;
 
-	public BukkitCommandExecutor_Staff(DiscordNotifyMain plugin) {
-		super("staff", null, null, Arrays.asList("Options.Broadcast"));
+	public BukkitCommandExecutor_Staff(DiscordNotifyMain plugin, String name) {
+		super(name);
 		this.instance = plugin;
 		this.staffCommand = new DN_StaffCommand(plugin);
 	}

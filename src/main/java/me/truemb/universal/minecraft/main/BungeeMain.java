@@ -4,6 +4,7 @@ import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 import org.bstats.bungeecord.Metrics;
 
@@ -75,16 +76,43 @@ public class BungeeMain extends Plugin implements IRelay, Listener {
 		
 		//LOAD COMMANDS
 		if(this.instance.getConfigManager().getConfig().getBoolean("Options.Chat.enableSplittedChat")) {
-			BungeeCommandExecutor_DChat dchatCommand = new BungeeCommandExecutor_DChat(this.instance);
+			final List<String> commandAliases = this.instance.getConfigManager().getConfig().getStringList("Options.CommandOverride.Minecraft.dchat");
+			BungeeCommandExecutor_DChat dchatCommand;
+
+			if(commandAliases != null && !commandAliases.isEmpty()) {
+				final String commandName = commandAliases.remove(0);
+				dchatCommand = new BungeeCommandExecutor_DChat(this.instance, commandName, commandAliases.toArray(new String[0]));
+			}else {
+				dchatCommand = new BungeeCommandExecutor_DChat(this.instance, "dchat");
+			}
+
 			ProxyServer.getInstance().getPluginManager().registerCommand(this, dchatCommand);
 		}
 		
 		if(this.instance.getConfigManager().isFeatureEnabled(FeatureType.Staff)) {
-			BungeeCommandExecutor_Staff staffCommand = new BungeeCommandExecutor_Staff(this.instance);
+			final List<String> commandAliases = this.instance.getConfigManager().getConfig().getStringList("Options.CommandOverride.staff");
+ 			BungeeCommandExecutor_Staff staffCommand;
+
+			 if(commandAliases != null && !commandAliases.isEmpty()) {
+				 final String commandName = commandAliases.remove(0);
+			 	staffCommand = new BungeeCommandExecutor_Staff(this.instance, commandName, commandAliases.toArray(new String[0]));
+			 }else{
+				 staffCommand = new BungeeCommandExecutor_Staff(this.instance, "staff", "s");
+			 }
+
 			ProxyServer.getInstance().getPluginManager().registerCommand(this, staffCommand);
 		}
+
+		List<String> verifyCommandAliases = this.instance.getConfigManager().getConfig().getStringList("Options.CommandOverride.verify");
+		BungeeCommandExecutor_Verify verifyCommand;
+
+		if(verifyCommandAliases != null && !verifyCommandAliases.isEmpty()) {
+			final String commandName = verifyCommandAliases.remove(0);
+			verifyCommand = new BungeeCommandExecutor_Verify(this.instance, commandName, verifyCommandAliases.toArray(new String[0]));
+		}else{
+			verifyCommand = new BungeeCommandExecutor_Verify(this.instance, "verify");
+		}
 		
-		BungeeCommandExecutor_Verify verifyCommand = new BungeeCommandExecutor_Verify(this.instance);
 		ProxyServer.getInstance().getPluginManager().registerCommand(this, verifyCommand);
 		
 		//METRICS ANALYTICS

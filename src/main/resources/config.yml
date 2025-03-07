@@ -166,6 +166,15 @@ Options:
     serverSeperatedStatus:
       lobby: -1
       freebuild: -1
+  CommandOverride:
+    Discord:
+      playerinfo: [ "playerinfo", "pi" ]
+      verify: [ "verify" ]
+    Minecraft:
+      verify: ["verify"]
+      staff: ["staff", "s"]
+      dchat: ["dchat"]
+
 #Add the discord Groups in the Lists. If there is a group set, it wont be public for everybody anymore.
 DiscordCommandAllowedGroups:
   Verify:

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
@@ -73,18 +74,49 @@ public class BukkitMain extends JavaPlugin implements IRelay {
 			    commandMapField.setAccessible(true);
 			    CommandMap commandMap = (CommandMap) commandMapField.get(Bukkit.getServer());
 
-				BukkitCommandExecutor_Staff staffCommand = new BukkitCommandExecutor_Staff(this.instance);
-				commandMap.register("staff", staffCommand);
-				List<String> staffAliases = new ArrayList<>();
-				staffAliases.add("s");
-				staffCommand.setAliases(staffAliases);
-			    
-				BukkitCommandExecutor_Verify verifyCommand = new BukkitCommandExecutor_Verify(this.instance);
-				commandMap.register("verify", verifyCommand);
-				
+				// STAFF COMMAND
+				final List<String> staffCommandAliases = this.instance.getConfigManager().getConfig().getStringList("Options.CommandOverride.staff");
+
+				BukkitCommandExecutor_Staff staffCommand;
+				if(staffCommandAliases != null && !staffCommandAliases.isEmpty()) {
+					final String commandName = staffCommandAliases.remove(0);
+					staffCommand = new BukkitCommandExecutor_Staff(this.instance, commandName);
+					commandMap.register(commandName, staffCommand);
+					staffCommand.setAliases(staffCommandAliases);
+				} else{
+					staffCommand = new BukkitCommandExecutor_Staff(this.instance, "staff");
+					commandMap.register("staff", staffCommand);
+					staffCommand.setAliases(ImmutableList.of("s"));
+				}
+
+				// VERIFY COMMAND
+				final List<String> verifyCommandAliases = this.instance.getConfigManager().getConfig().getStringList("Options.CommandOverride.verify");
+
+				BukkitCommandExecutor_Verify verifyCommand;
+				if(verifyCommandAliases != null && !verifyCommandAliases.isEmpty()) {
+					final String commandName = verifyCommandAliases.remove(0);
+					verifyCommand = new BukkitCommandExecutor_Verify(this.instance, commandName);
+					commandMap.register(commandName, verifyCommand);
+					verifyCommand.setAliases(verifyCommandAliases);
+				} else {
+					verifyCommand = new BukkitCommandExecutor_Verify(this.instance, "verify");
+					commandMap.register("verify", verifyCommand);
+				}
+
+				// DCHAT COMMAND
 				if(this.instance.getConfigManager().getConfig().getBoolean("Options.Chat.enableSplittedChat")) {
-					BukkitCommandExecutor_DChat dchatCommand = new BukkitCommandExecutor_DChat(this.instance);
-					commandMap.register("dchat", dchatCommand);
+					final List<String> dchatCommandAliases = this.instance.getConfigManager().getConfig().getStringList("Options.CommandOverride.Minecraft.dchat");
+
+					BukkitCommandExecutor_DChat dchatCommand;
+					if (dchatCommandAliases != null && !dchatCommandAliases.isEmpty()) {
+						final String commandName = dchatCommandAliases.remove(0);
+						dchatCommand = new BukkitCommandExecutor_DChat(this.instance, commandName);
+						commandMap.register(commandName, dchatCommand);
+						dchatCommand.setAliases(dchatCommandAliases);
+					} else {
+						dchatCommand = new BukkitCommandExecutor_DChat(this.instance, "dchat");
+						commandMap.register("dchat", dchatCommand);
+					}
 				}
 			    
 			}catch(Exception exception){

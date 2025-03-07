@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Nullable;
 
+import com.google.common.collect.ImmutableList;
 import org.spicord.Spicord;
 import org.spicord.SpicordLoader;
 import org.spicord.bot.DiscordBot;
@@ -77,8 +78,18 @@ public class DiscordManager {
 	public void registerAddons(String botname) {
     	
     	//ADDONS NEEDS TO BE SET UP IN SPICORD
-	    this.playerInfoAddon = new DC_PlayerInfoCommand(this.instance);
-	    this.verifyAddon = new DC_VerifyCommand(this.instance);
+		List<String> playerInfoAliases = this.instance.getConfigManager().getConfig().getStringList("Options.CommandOverride.Discord.playerinfo");
+		if(playerInfoAliases == null || playerInfoAliases.isEmpty()){
+			playerInfoAliases = ImmutableList.of("pi", "playerinfo");
+		}
+
+		List<String> verifyAliases = this.instance.getConfigManager().getConfig().getStringList("Options.CommandOverride.Discord.verify");
+		if(verifyAliases == null || verifyAliases.isEmpty()){
+			verifyAliases = ImmutableList.of("verify");
+		}
+
+		this.playerInfoAddon = new DC_PlayerInfoCommand(this.instance, playerInfoAliases.toArray(new String[0]));
+		this.verifyAddon = new DC_VerifyCommand(this.instance, verifyAliases.toArray(new String[0]));
 	    	
 	    SpicordLoader.addStartupListener(spicord -> {
 	    	
