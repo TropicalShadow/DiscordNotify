@@ -44,7 +44,7 @@ repositories {
     }
 
     maven {
-        url = uri('https://hub.jeff-media.com/nexus/repository/jeff-media-public/')
+        url = uri('https://repo.jeff-media.com/public/')
     }
 
     maven {
